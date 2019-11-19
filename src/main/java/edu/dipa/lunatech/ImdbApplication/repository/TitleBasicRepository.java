@@ -16,10 +16,8 @@ public interface TitleBasicRepository extends JpaRepository<TitleBasic, Integer>
     @Query("select tb.genres from TitleBasic tb where tb.tconst =(:tconst)")
     Optional<String> findByTconst(@Param("tconst") Integer tconst);
 
-   /* @Query("select tb.tconst, tb.titleType, tb.originalTitle from TitleBasic " +
-            "tb where tb.titleType=(:titleType")
-    List<TitleBasic> findByTitleType(@Param("titleType") String titleType);*/
-
+    @Query("select tb.originalTitle from TitleBasic tb where tb.tconst =(:tconst)")
+    Optional<String> findByTconstTitle(@Param("tconst") Integer tconst);
 
 
 }

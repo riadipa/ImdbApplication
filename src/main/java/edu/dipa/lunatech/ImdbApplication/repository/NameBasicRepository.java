@@ -14,10 +14,6 @@ public interface NameBasicRepository extends JpaRepository<NameBasic, String> {
 
     Optional<NameBasic> findByPrimaryName(String name);
 
-    /*@Query("select nb.primaryName, nb.knownForTitles from NameBasic nb " +
-            "where nb.knownForTitles=(:knownForTitles) ")
-    List<NameBasic> findAllByTwoPrimaryNames(String name1, String name2);*/
-
     List<NameBasic> findByPrimaryNameLike(String pattern);
 
 

@@ -79,5 +79,41 @@ public class PersonService {
             return new ArrayList<>();
         }
     }
+    private List<String> getListOfMoviesOrTvShows(String name){
+        Optional<NameBasic> nameBasic = nameRepo.findByPrimaryName(name);
+        if (nameBasic.isPresent()) {
+            String knownForTitles = nameBasic.get().getKnownForTitles();
+            List<String> titles = Arrays.asList(knownForTitles.split("\\s*,\\s*"));
+            List<String> listOfMoviesOrTvShows= new ArrayList<>();
+            for (String tconst : titles) {
+                Integer intTconst = Integer.valueOf(tconst);
+                Optional<String> shows= titleRepo.findByTconstTitle(intTconst);
+                if (shows.isPresent()) {
+                    List<String> showsList= Arrays.asList(shows.get());
+                    listOfMoviesOrTvShows.addAll(showsList) ;
+                }
+            }
+            logger.info("listOfMoviesOrTvShows" + listOfMoviesOrTvShows);
+            return listOfMoviesOrTvShows;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<String> getCommonListOfMoviesOrTvShows(String name1, String name2){
+        List<String> listOfMoviesOrTvShowsForName1= getListOfMoviesOrTvShows(name1);
+        logger.info("listOfMoviesOrTvShowsForName1"+listOfMoviesOrTvShowsForName1);
+        List<String> listOfMoviesOrTvShowsForName2= getListOfMoviesOrTvShows(name2);
+        logger.info("listOfMoviesOrTvShowsForName2"+listOfMoviesOrTvShowsForName2);
+        List<String> listOfCommonMoviesOrTvShows= new ArrayList<>();
+        for(String value: listOfMoviesOrTvShowsForName1){
+            if(listOfMoviesOrTvShowsForName2.contains(value)){
+                listOfCommonMoviesOrTvShows.add(value);
+            }
+        }
+        logger.info("listOfCommonMoviesOrTvShows"+listOfCommonMoviesOrTvShows);
+        return listOfCommonMoviesOrTvShows;
+
+    }
 
 }
