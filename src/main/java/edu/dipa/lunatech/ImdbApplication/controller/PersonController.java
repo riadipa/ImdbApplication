@@ -31,7 +31,7 @@ public class PersonController {
     @GetMapping(value = "/person")
     public ResponseEntity<List<String>> getCommonListOfMoviesOrTvShows(@RequestParam("name1") String name1,
                                                                        @RequestParam("name2") String name2){
-        List<String> commonListOfMoviesOrTvShows= personService.getCommonListOfMoviesOrTvShows(name1, name2);
+        List<String> commonListOfMoviesOrTvShows= personService.getCommonList(name1, name2);
         if (commonListOfMoviesOrTvShows.isEmpty()) {
             return new ResponseEntity<List<String>>(HttpStatus.NOT_FOUND);
         }else{

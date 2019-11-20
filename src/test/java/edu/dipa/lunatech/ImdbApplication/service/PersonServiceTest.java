@@ -82,26 +82,72 @@ public class PersonServiceTest {
     }
 
     @Test
-    public void getCommonListOfMoviesOrTvShows(){
-        Optional<NameBasic> person1= createPerson1();
-        Optional<NameBasic> person2= createPerson2();
+    public void getCommonList(){
+        List<NameBasic> personList1= createPersonList1();
+        List<NameBasic> personList2= createPersonList2();
 
-        when(mockedNameBasicRepository.findByPrimaryName(person1.get().getPrimaryName())).thenReturn(person1);
-        when(mockedTitleBasicRepository.findByTconstTitle(71877)).thenReturn(Optional.of(createTitle1().getOriginalTitle()));
-        when(mockedTitleBasicRepository.findByTconstTitle(38355)).thenReturn(Optional.of(createTitle2().getOriginalTitle()));
-        when(mockedTitleBasicRepository.findByTconstTitle(117057)).thenReturn(Optional.of(createTitle3().getOriginalTitle()));
-        when(mockedTitleBasicRepository.findByTconstTitle(37382)).thenReturn(Optional.of(createTitle4().getOriginalTitle()));
+        when(mockedNameBasicRepository.findAllByPrimaryName(personList1.get(0).getPrimaryName())).thenReturn(personList1);
+        when(mockedTitleBasicRepository.findByTconstTitle(4832640)).thenReturn(Optional.of(createTitle5().getOriginalTitle()));
+        when(mockedTitleBasicRepository.findByTconstTitle(3863552)).thenReturn(Optional.of(createTitle6().getOriginalTitle()));
+        when(mockedTitleBasicRepository.findByTconstTitle(1620719)).thenReturn(Optional.of(createTitle7().getOriginalTitle()));
+        when(mockedTitleBasicRepository.findByTconstTitle(2016894)).thenReturn(Optional.of(createTitle8().getOriginalTitle()));
 
-        when(mockedNameBasicRepository.findByPrimaryName(person2.get().getPrimaryName())).thenReturn(person2);
-        when(mockedTitleBasicRepository.findByTconstTitle(284521)).thenReturn(Optional.of(createTitle5().getOriginalTitle()));
-        when(mockedTitleBasicRepository.findByTconstTitle(4719712)).thenReturn(Optional.of(createTitle6().getOriginalTitle()));
-        when(mockedTitleBasicRepository.findByTconstTitle(50677)).thenReturn(Optional.of(createTitle7().getOriginalTitle()));
-        when(mockedTitleBasicRepository.findByTconstTitle(166060)).thenReturn(Optional.of(createTitle8().getOriginalTitle()));
+        List<String> getListOfMoviesOrTvShowsPerson1= personService.getListOfMoviesOrTvShows(personList1.get(0));
+
+        when(mockedNameBasicRepository.findAllByPrimaryName(personList2.get(0).getPrimaryName())).thenReturn(personList2);
+        when(mockedTitleBasicRepository.findByTconstTitle(4832640)).thenReturn(Optional.of(createTitle10().getOriginalTitle()));
+        when(mockedTitleBasicRepository.findByTconstTitle(1620719)).thenReturn(Optional.of(createTitle11().getOriginalTitle()));
+        when(mockedTitleBasicRepository.findByTconstTitle(1188996)).thenReturn(Optional.of(createTitle12().getOriginalTitle()));
+        when(mockedTitleBasicRepository.findByTconstTitle(439662)).thenReturn(Optional.of(createTitle13().getOriginalTitle()));
+
+        List<String> getListOfMoviesOrTvShowsPerson2= personService.getListOfMoviesOrTvShows(personList2.get(0));
+
 
         List<String> listOfCommonMoviesOrTvShows= personService.getCommonListOfMoviesOrTvShows
-                (person1.get().getPrimaryName(), person2.get().getPrimaryName());
-        List<String> testCommonList=Arrays.asList("Murder on the Orient Express","The Mirror Has Two Faces");
+                                     (getListOfMoviesOrTvShowsPerson1, getListOfMoviesOrTvShowsPerson2);
+
+        List<String> testCommonList= Arrays.asList("Pyar Kiya to Darna Kya", "Kuchh Kuchh Hota Hai");
         assertEquals(testCommonList, listOfCommonMoviesOrTvShows);
+
+/*
+
+        when(mockedNameBasicRepository.findAllByPrimaryName(personList1.get(1).getPrimaryName())).thenReturn(personList1);
+        when(mockedTitleBasicRepository.findByTconstTitle(2354223)).thenReturn(Optional.of(createTitle9().getOriginalTitle()));
+
+        List<String> getListOfMoviesOrTvShowsForPerson1= personService.getListOfMoviesOrTvShows(personList1.get(1));
+
+        when(mockedNameBasicRepository.findAllByPrimaryName(personList2.get(1).getPrimaryName())).thenReturn(personList2);
+        when(mockedTitleBasicRepository.findByTconstTitle(5661532)).thenReturn(Optional.of(createTitle14().getOriginalTitle()));
+
+        List<String> getListOfMoviesOrTvShowsForPerson2= personService.getListOfMoviesOrTvShows(personList2.get(1));
+*/
+
+    }
+
+    public List<NameBasic> createPersonList1() {
+        NameBasic nameBasic1 = new NameBasic();
+        nameBasic1.setNconst(1);
+        nameBasic1.setPrimaryName("Salman Khan");
+        nameBasic1.setKnownForTitles("4832640,3863552,1620719,2016894");
+        NameBasic nameBasic2 = new NameBasic();
+        nameBasic2.setNconst(2);
+        nameBasic2.setPrimaryName("Salman Khan");
+        nameBasic2.setKnownForTitles("2354223");
+        List<NameBasic> nameList= Arrays.asList(nameBasic1, nameBasic2);
+        return nameList;
+    }
+
+    public List<NameBasic> createPersonList2() {
+        NameBasic nameBasic1 = new NameBasic();
+        nameBasic1.setNconst(1);
+        nameBasic1.setPrimaryName("Kajol");
+        nameBasic1.setKnownForTitles("4832640,1620719,1188996,0439662");
+        NameBasic nameBasic2 = new NameBasic();
+        nameBasic2.setNconst(2);
+        nameBasic2.setPrimaryName("Kajol");
+        nameBasic2.setKnownForTitles("5661532");
+        List<NameBasic> nameList= Arrays.asList(nameBasic1, nameBasic2);
+        return nameList;
     }
 
     public Optional<NameBasic> createPerson1() {
@@ -154,33 +200,82 @@ public class PersonServiceTest {
 
     public TitleBasic createTitle5() {
         TitleBasic titleBasic = new TitleBasic();
-        titleBasic.setTconst(284521);
-        titleBasic.setOriginalTitle("The Mirror Has Two Faces");
+        titleBasic.setTconst(4832640);
+        titleBasic.setOriginalTitle("Pyar Kiya to Darna Kya");
         titleBasic.setGenres("Crime, Drama");
         return titleBasic;
     }
 
     public TitleBasic createTitle6() {
         TitleBasic titleBasic = new TitleBasic();
-        titleBasic.setTconst(4719712);
-        titleBasic.setOriginalTitle("Murder on the Orient Express");
+        titleBasic.setTconst(3863552);
+        titleBasic.setOriginalTitle("Ek Tha Tiger");
         titleBasic.setGenres("Crime,Film-Noir");
         return titleBasic;
     }
 
     public TitleBasic createTitle7() {
         TitleBasic titleBasic = new TitleBasic();
-        titleBasic.setTconst(50677);
-        titleBasic.setOriginalTitle("Man from Tangier");
+        titleBasic.setTconst(1620719);
+        titleBasic.setOriginalTitle("Kuchh Kuchh Hota Hai");
         titleBasic.setGenres("Comedy,Crime");
         return titleBasic;
     }
 
     public TitleBasic createTitle8() {
         TitleBasic titleBasic = new TitleBasic();
-        titleBasic.setTconst(166060);
-        titleBasic.setOriginalTitle("Stranger on the Shore");
+        titleBasic.setTconst(2016894);
+        titleBasic.setOriginalTitle("Bajrangi Bhaijan");
         titleBasic.setGenres("Adventure,Crime");
         return titleBasic;
     }
+
+    public TitleBasic createTitle9() {
+        TitleBasic titleBasic = new TitleBasic();
+        titleBasic.setTconst(2354223);
+        titleBasic.setOriginalTitle("Dabangg");
+        titleBasic.setGenres("Adventure,Crime");
+        return titleBasic;
+    }
+
+    public TitleBasic createTitle10() {
+        TitleBasic titleBasic = new TitleBasic();
+        titleBasic.setTconst(4832640);
+        titleBasic.setOriginalTitle("Pyar Kiya to Darna Kya");
+        titleBasic.setGenres("Adventure,Crime");
+        return titleBasic;
+    }
+
+    public TitleBasic createTitle11() {
+        TitleBasic titleBasic = new TitleBasic();
+        titleBasic.setTconst(1620719);
+        titleBasic.setOriginalTitle("Kuchh Kuchh Hota Hai");
+        titleBasic.setGenres("Adventure,Crime");
+        return titleBasic;
+    }
+
+    public TitleBasic createTitle12() {
+        TitleBasic titleBasic = new TitleBasic();
+        titleBasic.setTconst(1188996);
+        titleBasic.setOriginalTitle("My Name is Khan");
+        titleBasic.setGenres("Adventure,Crime");
+        return titleBasic;
+    }
+
+    public TitleBasic createTitle13() {
+        TitleBasic titleBasic = new TitleBasic();
+        titleBasic.setTconst(439662);
+        titleBasic.setOriginalTitle("Gupt");
+        titleBasic.setGenres("Adventure,Crime");
+        return titleBasic;
+    }
+
+    public TitleBasic createTitle14() {
+        TitleBasic titleBasic = new TitleBasic();
+        titleBasic.setTconst(5661532);
+        titleBasic.setOriginalTitle("Baazigar");
+        titleBasic.setGenres("Adventure,Crime");
+        return titleBasic;
+    }
+
 }

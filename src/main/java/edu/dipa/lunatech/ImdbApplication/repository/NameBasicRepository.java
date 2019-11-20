@@ -14,6 +14,8 @@ public interface NameBasicRepository extends JpaRepository<NameBasic, String> {
 
     Optional<NameBasic> findByPrimaryName(String name);
 
+    List<NameBasic> findAllByPrimaryName(String name);
+
     List<NameBasic> findByPrimaryNameLike(String pattern);
 
 
