@@ -35,11 +35,21 @@ public class PersonServiceTest {
 
     private Optional<NameBasic> person;
 
+    private static final String PERSON_NAME_1 = "Salman Khan";
+    private static final String PERSON_NAME_2 = "Kajol";
+
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
+
+        /**
+         * Creating data for test
+         */
         person = createPerson1();
 
-        when(mockedNameBasicRepository.findByPrimaryName(person.get().getPrimaryName())).thenReturn(person);
+        /**
+         * Mocking Data for Person
+         */
+        when(mockedNameBasicRepository.findFirstByPrimaryName(person.get().getPrimaryName())).thenReturn(person);
         when(mockedTitleBasicRepository.findByTconst(71877)).thenReturn(Optional.of(createTitle1().getGenres()));
         when(mockedTitleBasicRepository.findByTconst(38355)).thenReturn(Optional.of(createTitle2().getGenres()));
         when(mockedTitleBasicRepository.findByTconst(117057)).thenReturn(Optional.of(createTitle3().getGenres()));
@@ -48,20 +58,27 @@ public class PersonServiceTest {
 
     @Test
     public void getPersonGenresByName() {
-        List<String> listOfGenres = personService.getPersonGenresDetails(person.get().getPrimaryName());
 
+        /**
+         * Creating data for test
+         */
         List<String> testGenres = Arrays.asList("Crime", "Drama", "Film-Noir", "Comedy", "Adventure");
+
+        /**
+         * Test
+         */
+        List<String> listOfGenres = personService.getGenresByNameBasic(person.get());
 
         for (String testGenre : testGenres) {
             assertTrue(listOfGenres.contains(testGenre));
         }
 
         Map<String, Integer> genreCountMap = new HashMap<>();
-        for (String genre: listOfGenres) {
-            if(genreCountMap.containsKey(genre)){
+        for (String genre : listOfGenres) {
+            if (genreCountMap.containsKey(genre)) {
                 genreCountMap.put(genre, genreCountMap.get(genre) + 1);
-            }else {
-                genreCountMap.put(genre,1);
+            } else {
+                genreCountMap.put(genre, 1);
             }
         }
         for (String testGenre : testGenres) {
@@ -75,78 +92,80 @@ public class PersonServiceTest {
 
     @Test
     public void isPersonTypeCasted() {
-        List<String> listOfGenres = personService.getPersonGenresDetails(person.get().getPrimaryName());
-        Map<String, String> resultMap= personService.isPersonTypeCastedByGenre(listOfGenres);
+        /**
+         * Test
+         */
+        List<String> listOfGenres = personService.getGenresByNameBasic(person.get());
+        Map<String, String> resultMap = personService.isPersonTypeCastedByGenre(listOfGenres);
         assertEquals("true", resultMap.get("isTypeCasted"));
         assertEquals("Crime", resultMap.get("genre"));
     }
 
     @Test
-    public void getCommonList(){
-        List<NameBasic> personList1= createPersonList1();
-        List<NameBasic> personList2= createPersonList2();
+    public void getCommonList() {
 
-        when(mockedNameBasicRepository.findAllByPrimaryName(personList1.get(0).getPrimaryName())).thenReturn(personList1);
+        /**
+         * Creating data for test
+         */
+        List<NameBasic> personList1 = createListOfPersonsWithName1();
+        List<NameBasic> personList2 = createListOfPersonsWithName2();
+
+        /**
+         * Mocking Data for Person 1
+         */
+        when(mockedNameBasicRepository.findAllByPrimaryName(PERSON_NAME_1)).thenReturn(personList1);
         when(mockedTitleBasicRepository.findByTconstTitle(4832640)).thenReturn(Optional.of(createTitle5().getOriginalTitle()));
         when(mockedTitleBasicRepository.findByTconstTitle(3863552)).thenReturn(Optional.of(createTitle6().getOriginalTitle()));
         when(mockedTitleBasicRepository.findByTconstTitle(1620719)).thenReturn(Optional.of(createTitle7().getOriginalTitle()));
         when(mockedTitleBasicRepository.findByTconstTitle(2016894)).thenReturn(Optional.of(createTitle8().getOriginalTitle()));
+        when(mockedTitleBasicRepository.findByTconstTitle(2354223)).thenReturn(Optional.of(createTitle9().getOriginalTitle()));
 
-        List<String> getListOfMoviesOrTvShowsPerson1= personService.getListOfMoviesOrTvShows(personList1.get(0));
-
-        when(mockedNameBasicRepository.findAllByPrimaryName(personList2.get(0).getPrimaryName())).thenReturn(personList2);
+        /**
+         * Mocking Data for Person 2
+         */
+        when(mockedNameBasicRepository.findAllByPrimaryName(PERSON_NAME_2)).thenReturn(personList2);
         when(mockedTitleBasicRepository.findByTconstTitle(4832640)).thenReturn(Optional.of(createTitle10().getOriginalTitle()));
         when(mockedTitleBasicRepository.findByTconstTitle(1620719)).thenReturn(Optional.of(createTitle11().getOriginalTitle()));
         when(mockedTitleBasicRepository.findByTconstTitle(1188996)).thenReturn(Optional.of(createTitle12().getOriginalTitle()));
         when(mockedTitleBasicRepository.findByTconstTitle(439662)).thenReturn(Optional.of(createTitle13().getOriginalTitle()));
-
-        List<String> getListOfMoviesOrTvShowsPerson2= personService.getListOfMoviesOrTvShows(personList2.get(0));
-
-
-        List<String> listOfCommonMoviesOrTvShows= personService.getCommonListOfMoviesOrTvShows
-                                     (getListOfMoviesOrTvShowsPerson1, getListOfMoviesOrTvShowsPerson2);
-
-        List<String> testCommonList= Arrays.asList("Pyar Kiya to Darna Kya", "Kuchh Kuchh Hota Hai");
-        assertEquals(testCommonList, listOfCommonMoviesOrTvShows);
-
-/*
-
-        when(mockedNameBasicRepository.findAllByPrimaryName(personList1.get(1).getPrimaryName())).thenReturn(personList1);
-        when(mockedTitleBasicRepository.findByTconstTitle(2354223)).thenReturn(Optional.of(createTitle9().getOriginalTitle()));
-
-        List<String> getListOfMoviesOrTvShowsForPerson1= personService.getListOfMoviesOrTvShows(personList1.get(1));
-
-        when(mockedNameBasicRepository.findAllByPrimaryName(personList2.get(1).getPrimaryName())).thenReturn(personList2);
         when(mockedTitleBasicRepository.findByTconstTitle(5661532)).thenReturn(Optional.of(createTitle14().getOriginalTitle()));
 
-        List<String> getListOfMoviesOrTvShowsForPerson2= personService.getListOfMoviesOrTvShows(personList2.get(1));
-*/
+        /**
+         * Test
+         */
+        List<String> getListOfMoviesOrTvShowsPerson1 = personService.getListOfMoviesOrTvShows(personList1.get(0));
+        List<String> getListOfMoviesOrTvShowsPerson2 = personService.getListOfMoviesOrTvShows(personList2.get(0));
 
+        List<String> listOfCommonMoviesOrTvShows = personService.getCommonListOfMoviesOrTvShows
+                (getListOfMoviesOrTvShowsPerson1, getListOfMoviesOrTvShowsPerson2);
+
+        List<String> testCommonList = Arrays.asList("Pyar Kiya to Darna Kya", "Kuchh Kuchh Hota Hai");
+        assertEquals(testCommonList, listOfCommonMoviesOrTvShows);
     }
 
-    public List<NameBasic> createPersonList1() {
+    public List<NameBasic> createListOfPersonsWithName1() {
         NameBasic nameBasic1 = new NameBasic();
         nameBasic1.setNconst(1);
-        nameBasic1.setPrimaryName("Salman Khan");
+        nameBasic1.setPrimaryName(PERSON_NAME_1);
         nameBasic1.setKnownForTitles("4832640,3863552,1620719,2016894");
         NameBasic nameBasic2 = new NameBasic();
         nameBasic2.setNconst(2);
-        nameBasic2.setPrimaryName("Salman Khan");
+        nameBasic2.setPrimaryName(PERSON_NAME_1);
         nameBasic2.setKnownForTitles("2354223");
-        List<NameBasic> nameList= Arrays.asList(nameBasic1, nameBasic2);
+        List<NameBasic> nameList = Arrays.asList(nameBasic1, nameBasic2);
         return nameList;
     }
 
-    public List<NameBasic> createPersonList2() {
+    public List<NameBasic> createListOfPersonsWithName2() {
         NameBasic nameBasic1 = new NameBasic();
         nameBasic1.setNconst(1);
-        nameBasic1.setPrimaryName("Kajol");
+        nameBasic1.setPrimaryName(PERSON_NAME_2);
         nameBasic1.setKnownForTitles("4832640,1620719,1188996,0439662");
         NameBasic nameBasic2 = new NameBasic();
         nameBasic2.setNconst(2);
-        nameBasic2.setPrimaryName("Kajol");
+        nameBasic2.setPrimaryName(PERSON_NAME_2);
         nameBasic2.setKnownForTitles("5661532");
-        List<NameBasic> nameList= Arrays.asList(nameBasic1, nameBasic2);
+        List<NameBasic> nameList = Arrays.asList(nameBasic1, nameBasic2);
         return nameList;
     }
 
@@ -155,14 +174,6 @@ public class PersonServiceTest {
         nameBasic.setNconst(1);
         nameBasic.setPrimaryName("Lauren Bacall");
         nameBasic.setKnownForTitles("0071877,0038355,0117057,0037382");
-        return Optional.of(nameBasic);
-    }
-
-    public Optional<NameBasic> createPerson2() {
-        NameBasic nameBasic = new NameBasic();
-        nameBasic.setNconst(1);
-        nameBasic.setPrimaryName("Fred Lake");
-        nameBasic.setKnownForTitles("0284521,4719712,0050677,0166060");
         return Optional.of(nameBasic);
     }
 

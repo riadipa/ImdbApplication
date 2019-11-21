@@ -20,21 +20,20 @@ public class PersonController {
 
     @GetMapping(value = "/person/{name}")
     public ResponseEntity<Map<String, String>> isPersonTypeCasted(@PathVariable("name") String name) {
-        List<String> listOfGenres = personService.getPersonGenresDetails(name);
-        if (listOfGenres.isEmpty()) {
+        Map<String, String> result = personService.isPersonTypeCasted(name);
+        if (result == null) {
             return new ResponseEntity<Map<String, String>>(HttpStatus.NOT_FOUND);
         }
-        Map<String, String> result = personService.isPersonTypeCastedByGenre(listOfGenres);
         return new ResponseEntity<Map<String, String>>(result, HttpStatus.ACCEPTED);
     }
 
     @GetMapping(value = "/person")
     public ResponseEntity<List<String>> getCommonListOfMoviesOrTvShows(@RequestParam("name1") String name1,
-                                                                       @RequestParam("name2") String name2){
-        List<String> commonListOfMoviesOrTvShows= personService.getCommonList(name1, name2);
+                                                                       @RequestParam("name2") String name2) {
+        List<String> commonListOfMoviesOrTvShows = personService.getCommonList(name1, name2);
         if (commonListOfMoviesOrTvShows.isEmpty()) {
             return new ResponseEntity<List<String>>(HttpStatus.NOT_FOUND);
-        }else{
+        } else {
             return new ResponseEntity<List<String>>(commonListOfMoviesOrTvShows, HttpStatus.ACCEPTED);
         }
     }

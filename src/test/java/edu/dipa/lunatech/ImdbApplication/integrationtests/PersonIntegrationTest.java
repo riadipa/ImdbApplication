@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,6 +35,22 @@ public class PersonIntegrationTest {
     int randomServerPort;
 
     @Test
+    public void isPersonTypeCasted(){
+        String name1= createPerson1().getPrimaryName();
+
+        final String uri= "http://localhost:" + randomServerPort + "/person/"+name1;
+
+        TestRestTemplate restTemplate= new TestRestTemplate();
+        HttpHeaders headers= new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        HttpEntity<Person> requestEntity= new HttpEntity<>(null, headers);
+        ResponseEntity<PersonTypeCastedValue> result= restTemplate.exchange(uri, HttpMethod.GET,
+                requestEntity,PersonTypeCastedValue.class);
+        assertEquals(202, result.getStatusCodeValue());
+
+    }
+
+    @Test
     public void retrieveCommonListOfMoviesOrTvShows(){
         String name1= createPerson1().getPrimaryName();
         String name2= createPerson2().getPrimaryName();
@@ -47,6 +64,10 @@ public class PersonIntegrationTest {
         ResponseEntity<ListOfCommonMoviesOrTvShows> result= restTemplate.exchange(uri, HttpMethod.GET,
                 requestEntity,ListOfCommonMoviesOrTvShows.class);
         assertEquals(202, result.getStatusCodeValue());
+
+    }
+
+    private static class PersonTypeCastedValue extends HashMap<String, String>{
 
     }
 

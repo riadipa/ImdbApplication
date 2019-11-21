@@ -26,7 +26,34 @@ public class PersonService {
     @Autowired
     TitleBasicRepository titleRepo;
 
-    public Map<String, String> isPersonTypeCastedByGenre(List<String> listOfGenres) {
+    /**
+     * This method is used when primary name is not unique
+     */
+    public List<Map<String, String>> isTypeCasted(String name) {
+        List<Map<String, String>> resultList = new ArrayList<>();
+        List<NameBasic> persons = nameRepo.findAllByPrimaryName(name);
+        for (NameBasic nameBasic : persons) {
+            resultList.add(isTypeCasted(nameBasic));
+        }
+
+        return resultList;
+    }
+
+    public Map<String, String> isPersonTypeCasted(String name) {
+        Optional<NameBasic> nameBasicOptional = nameRepo.findFirstByPrimaryName(name);
+        if (nameBasicOptional.isPresent()) {
+            return isTypeCasted(nameBasicOptional.get());
+        } else {
+            return null;
+        }
+    }
+
+    private Map<String, String> isTypeCasted(NameBasic nameBasic) {
+        List<String> genres = getGenresByNameBasic(nameBasic);
+        return isPersonTypeCastedByGenre(genres);
+    }
+
+    protected Map<String, String> isPersonTypeCastedByGenre(List<String> listOfGenres) {
 
         Map<String, Integer> genreCountMap = new HashMap<String, Integer>();
         Map<String, String> resultMap = new HashMap<>();
@@ -46,9 +73,9 @@ public class PersonService {
         }
         logger.info("total = " + total);
         for (Map.Entry<String, Integer> entry : genreCountMap.entrySet()) {
-            logger.info(entry.getKey() + " = " + entry.getValue());
+            logger.debug(entry.getKey() + " = " + entry.getValue());
             double percentage = ((double) entry.getValue() / total) * 100;
-            logger.info("percent" + percentage);
+            logger.debug("percent" + percentage);
             if (percentage >= (50.0 / 100.0) * 100) {
                 resultMap.put("isTypeCasted", "true");
                 resultMap.put("genre", entry.getKey());
@@ -59,25 +86,22 @@ public class PersonService {
         return resultMap;
     }
 
-    public List<String> getPersonGenresDetails(String name) {
-        Optional<NameBasic> nameBasic = nameRepo.findByPrimaryName(name);
-        if (nameBasic.isPresent()) {
-            String knownForTitles = nameBasic.get().getKnownForTitles();
-            List<String> titles = Arrays.asList(knownForTitles.split("\\s*,\\s*"));
+    protected List<String> getGenresByNameBasic(NameBasic nameBasic) {
+        List<String> listOfGenres = new ArrayList<>();
 
-            List<String> listOfGenres = new ArrayList<>();
-            for (String tconst : titles) {
-                Integer intTconst = Integer.valueOf(tconst);
-                Optional<String> genres = titleRepo.findByTconst(intTconst);
-                if (genres.isPresent()) {
-                    List<String> genreList = Arrays.asList(genres.get().split("\\s*,\\s*"));
-                    listOfGenres.addAll(genreList);
-                }
+        String knownForTitles = nameBasic.getKnownForTitles();
+        List<String> titles = Arrays.asList(knownForTitles.split("\\s*,\\s*"));
+
+        for (String tconst : titles) {
+            Integer intTconst = Integer.valueOf(tconst);
+            Optional<String> genres = titleRepo.findByTconst(intTconst);
+            if (genres.isPresent()) {
+                List<String> genreList = Arrays.asList(genres.get().split("\\s*,\\s*"));
+                listOfGenres.addAll(genreList);
             }
-            return listOfGenres;
-        } else {
-            return new ArrayList<>();
         }
+
+        return listOfGenres;
     }
 
     public List<String> getCommonList(String name1, String name2) {
@@ -89,20 +113,20 @@ public class PersonService {
                 List<String> getListOfMoviesOrTvShowsNameBasic1 = getListOfMoviesOrTvShows(nameBasic1);
                 List<String> getListOfMoviesOrTvShowsNameBasic2 = getListOfMoviesOrTvShows(nameBasic2);
                 commonList.addAll(getCommonListOfMoviesOrTvShows(getListOfMoviesOrTvShowsNameBasic1,
-                                                                 getListOfMoviesOrTvShowsNameBasic2));
-                logger.info("commonList" + commonList);
+                        getListOfMoviesOrTvShowsNameBasic2));
+                logger.debug("commonList" + commonList);
             }
         }
         return commonList;
     }
 
-    public List<String> getListOfMoviesOrTvShows(NameBasic nameBasic) {
+    protected List<String> getListOfMoviesOrTvShows(NameBasic nameBasic) {
         if (nameBasic != null) {
             if (nameBasic.getKnownForTitles() != null) {
                 String knownForTitles = nameBasic.getKnownForTitles();
-                logger.info("knownForTitles" + knownForTitles);
+                logger.debug("knownForTitles" + knownForTitles);
                 List<String> titles = Arrays.asList(knownForTitles.split("\\s*,\\s*"));
-                logger.info("titles" + titles);
+                logger.debug("titles" + titles);
                 List<String> listOfMoviesOrTvShows = new ArrayList<>();
                 for (String tconst : titles) {
                     Integer intTconst = Integer.valueOf(tconst);
@@ -112,7 +136,9 @@ public class PersonService {
                         listOfMoviesOrTvShows.addAll(showsList);
                     }
                 }
-                logger.info("listOfMoviesOrTvShows" + listOfMoviesOrTvShows);
+
+                logger.debug("listOfMoviesOrTvShows" + listOfMoviesOrTvShows);
+
                 return listOfMoviesOrTvShows;
             } else {
                 return new ArrayList<>();
@@ -123,15 +149,15 @@ public class PersonService {
 
     }
 
-    public List<String> getCommonListOfMoviesOrTvShows(List<String> listOfMoviesOrTvShowsForName1,
-                                                       List<String> listOfMoviesOrTvShowsForName2) {
+    protected List<String> getCommonListOfMoviesOrTvShows(List<String> listOfMoviesOrTvShowsForName1,
+                                                          List<String> listOfMoviesOrTvShowsForName2) {
         List<String> listOfCommonMoviesOrTvShows = new ArrayList<>();
         for (String value : listOfMoviesOrTvShowsForName1) {
             if (listOfMoviesOrTvShowsForName2.contains(value)) {
                 listOfCommonMoviesOrTvShows.add(value);
             }
         }
-        logger.info("listOfCommonMoviesOrTvShows" + listOfCommonMoviesOrTvShows);
+        logger.debug("listOfCommonMoviesOrTvShows" + listOfCommonMoviesOrTvShows);
         return listOfCommonMoviesOrTvShows;
 
     }

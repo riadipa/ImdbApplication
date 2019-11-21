@@ -10,18 +10,10 @@ import java.util.Optional;
 
 @SpringBootApplication
 public class ImdbApplication {
-	/*@Autowired
-	NameBasicRepository nameRepo;
-*/
+
 	public static void main(String[] args) {
 		SpringApplication.run(ImdbApplication.class, args);
 	}
-
-	/*public void run(String name){
-		Optional<NameBasic> nameBasic= nameRepo.findByPrimaryName(name);
-		String knownForTitles= nameBasic.get().getKnownForTitles();
-		System.out.println(knownForTitles);
-	}*/
 
 }
 
