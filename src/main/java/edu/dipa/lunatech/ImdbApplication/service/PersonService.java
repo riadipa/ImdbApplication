@@ -65,13 +65,13 @@ public class PersonService {
                 genreCountMap.put(genre, 1);
             }
         }
-        logger.info("genreCountMap" + genreCountMap);
+        logger.debug("genreCountMap" + genreCountMap);
 
         Integer total = 0;
         for (Integer value : genreCountMap.values()) {
             total = value + total;
         }
-        logger.info("total = " + total);
+        logger.debug("total = " + total);
         for (Map.Entry<String, Integer> entry : genreCountMap.entrySet()) {
             logger.debug(entry.getKey() + " = " + entry.getValue());
             double percentage = ((double) entry.getValue() / total) * 100;
