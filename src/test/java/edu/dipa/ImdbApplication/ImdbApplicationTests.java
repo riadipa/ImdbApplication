@@ -1,4 +1,4 @@
-package edu.dipa.lunatech.ImdbApplication;
+package edu.dipa.ImdbApplication;
 
 
 import org.junit.jupiter.api.Test;

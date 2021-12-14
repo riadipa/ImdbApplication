@@ -1,6 +1,6 @@
-package edu.dipa.lunatech.ImdbApplication.repository;
+package edu.dipa.ImdbApplication.repository;
 
-import edu.dipa.lunatech.ImdbApplication.entity.NameBasic;
+import edu.dipa.ImdbApplication.entity.NameBasic;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

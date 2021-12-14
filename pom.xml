@@ -8,7 +8,7 @@
 		<version>2.1.10.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>edu.dipa.lunatech</groupId>
+	<groupId>edu.dipa</groupId>
 	<artifactId>ImdbApplication</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>ImdbApplication</name>

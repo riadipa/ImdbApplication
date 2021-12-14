@@ -1,9 +1,9 @@
-package edu.dipa.lunatech.ImdbApplication.service;
+package edu.dipa.ImdbApplication.service;
 
-import edu.dipa.lunatech.ImdbApplication.entity.NameBasic;
-import edu.dipa.lunatech.ImdbApplication.entity.TitleBasic;
-import edu.dipa.lunatech.ImdbApplication.repository.NameBasicRepository;
-import edu.dipa.lunatech.ImdbApplication.repository.TitleBasicRepository;
+import edu.dipa.ImdbApplication.entity.NameBasic;
+import edu.dipa.ImdbApplication.entity.TitleBasic;
+import edu.dipa.ImdbApplication.repository.NameBasicRepository;
+import edu.dipa.ImdbApplication.repository.TitleBasicRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

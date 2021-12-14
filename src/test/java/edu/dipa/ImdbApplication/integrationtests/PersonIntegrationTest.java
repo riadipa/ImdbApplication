@@ -1,9 +1,7 @@
-package edu.dipa.lunatech.ImdbApplication.integrationtests;
+package edu.dipa.ImdbApplication.integrationtests;
 
-import edu.dipa.lunatech.ImdbApplication.ImdbApplication;
-import edu.dipa.lunatech.ImdbApplication.repository.NameBasicRepository;
-import edu.dipa.lunatech.ImdbApplication.repository.TitleBasicRepository;
-import edu.dipa.lunatech.ImdbApplication.service.PersonService;
+import edu.dipa.ImdbApplication.service.PersonService;
+import edu.dipa.ImdbApplication.ImdbApplication;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

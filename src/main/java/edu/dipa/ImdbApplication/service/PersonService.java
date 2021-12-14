@@ -1,8 +1,8 @@
-package edu.dipa.lunatech.ImdbApplication.service;
+package edu.dipa.ImdbApplication.service;
 
-import edu.dipa.lunatech.ImdbApplication.entity.NameBasic;
-import edu.dipa.lunatech.ImdbApplication.repository.NameBasicRepository;
-import edu.dipa.lunatech.ImdbApplication.repository.TitleBasicRepository;
+import edu.dipa.ImdbApplication.entity.NameBasic;
+import edu.dipa.ImdbApplication.repository.NameBasicRepository;
+import edu.dipa.ImdbApplication.repository.TitleBasicRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

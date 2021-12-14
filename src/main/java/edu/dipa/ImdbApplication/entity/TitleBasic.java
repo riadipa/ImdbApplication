@@ -1,4 +1,4 @@
-package edu.dipa.lunatech.ImdbApplication.entity;
+package edu.dipa.ImdbApplication.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;

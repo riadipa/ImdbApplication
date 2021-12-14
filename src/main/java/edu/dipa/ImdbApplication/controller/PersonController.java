@@ -1,6 +1,6 @@
-package edu.dipa.lunatech.ImdbApplication.controller;
+package edu.dipa.ImdbApplication.controller;
 
-import edu.dipa.lunatech.ImdbApplication.service.PersonService;
+import edu.dipa.ImdbApplication.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
